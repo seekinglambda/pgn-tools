@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
+import io
 import sys
+
 import chess
 import chess.pgn
-import io
-import os
 
 
 def truncate_pgn(pgn_string, max_depth):
@@ -21,7 +21,7 @@ def truncate_pgn(pgn_string, max_depth):
             truncate_node(variation, current_depth + 1)
 
     truncate_node(game)
-    exporter = chess.pgn.StringExporter(headers=True, variations=True, comments=True)
+    exporter = chess.pgn.StringExporter(headers=True, variations=True, comments=True, columns=None)
     return game.accept(exporter)
 
 
@@ -39,7 +39,7 @@ def main():
         sys.exit(1)
 
     try:
-        with open(input_pgn_file, 'r') as f:
+        with open(input_pgn_file, "r") as f:
             pgn_string = f.read()
     except IOError:
         print(f"Error: Could not read file {input_pgn_file}")
@@ -51,12 +51,13 @@ def main():
         sys.exit(1)
 
     try:
-        with open(output_pgn_file, 'w') as f:
+        with open(output_pgn_file, "w") as f:
             f.write(truncated_pgn)
         print(f"Truncated PGN has been written to {output_pgn_file}")
     except IOError:
         print(f"Error: Could not write to file {output_pgn_file}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
